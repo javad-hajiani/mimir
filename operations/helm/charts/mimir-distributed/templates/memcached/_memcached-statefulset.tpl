@@ -30,6 +30,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
+        {{- with $.ctx.Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         {{- with .podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -78,6 +81,14 @@ spec:
             - -u {{ .port }}
             {{- range $key, $value := .extraArgs }}
             - "-{{ $key }} {{ $value }}"
+            {{- end }}
+          env:
+            {{- with $.ctx.Values.global.extraEnv }}
+              {{ toYaml . | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- with $.ctx.Values.global.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
             {{- end }}
 
       {{- if .metrics.enabled }}
